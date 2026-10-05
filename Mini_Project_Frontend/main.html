@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Employee Search</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 500px; margin: 30px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+    input, button { padding: 8px; font-size: 14px; margin-right: 5px; }
+    .card { background: #f9f9f9; padding: 12px; margin-top: 15px; border-left: 4px solid #007bff; }
+    .error { color: red; margin-top: 15px; }
+  </style>
+</head>
+<body>
+
+  <h2>Office Directory Search</h2>
+  <input type="text" id="query" placeholder="Enter ID or Name">
+  <button onclick="search()">Search</button>
+
+  <div id="result"></div>
+
+  <script>
+    const employees = [
+      { id: 100245, name: "Aarav Sharma", designation: "Software Engineer", dues: 150.00, rating: 3.4, salary: 85000 },
+      { id: 100246, name: "Priya Patel", designation: "Product Manager", dues: 0.00, rating: 4.2, salary: 120000 },
+      { id: 100247, name: "Rohan Verma", designation: "QA Analyst", dues: 50.00, rating: 2.8, salary: 62000 }
+    ];
+
+    function search() {
+      const q = document.getElementById("query").value.trim().toLowerCase();
+      const res = document.getElementById("result");
+      if (!q) return res.innerHTML = "";
+
+      const matches = employees.filter(e => 
+        e.id.toString() === q || e.name.toLowerCase().includes(q)
+      );
+
+      if (matches.length === 0) {
+        res.innerHTML = `<p class="error">No employee found matching "${q}"</p>`;
+        return;
+      }
+
+      res.innerHTML = matches.map(e => `
+        <div class="card">
+          <p><strong>ID:</strong> ${e.id}</p>
+          <p><strong>Name:</strong> ${e.name}</p>
+          <p><strong>Designation:</strong> ${e.designation}</p>
+          <p><strong>Dues:</strong> $${e.dues.toFixed(2)}</p>
+          <p><strong>Rating:</strong> ${e.rating}</p>
+          <p><strong>Salary:</strong> $${e.salary.toLocaleString()}</p>
+          <p><strong>Eligible for Promotion:</strong> ${e.dues === 0 && e.rating >= 3.0 ? "Yes" : "No"}</p>
+        </div>
+      `).join("");
+    }
+  </script>
+
+</body>
+</html>
