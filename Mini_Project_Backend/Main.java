@@ -1,50 +1,78 @@
 import officeinfo.*;
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
-import java.util.Scanner;
 
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        List<OfficeIDCard> employees = SampleData.getEmployees();
+public class Main extends JFrame {
+    private JTextField searchField = new JTextField(15);
+    private JTextArea resultArea = new JTextArea(8, 40);
+    private List<OfficeIDCard> employees = SampleData.getEmployees();
 
-        while (true) {
-            System.out.print("\nEnter Employee ID or Name to search (or type 'exit' to quit): ");
-            String input = scanner.nextLine().trim();
+    public Main() {
+        setTitle("Employee Search");
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(new BorderLayout(5, 5));
 
-            if (input.equalsIgnoreCase("exit")) {
-                System.out.println("Exiting search. Goodbye!");
-                break;
-            }
+        // Top: label + text field + buttons
+        JPanel top = new JPanel(new FlowLayout());
+        JButton searchBtn = new JButton("Search");
+        JButton exitBtn = new JButton("Exit");
+        top.add(new JLabel("Employee ID or Name:"));
+        top.add(searchField);
+        top.add(searchBtn);
+        top.add(exitBtn);
 
-            if (input.isEmpty()) continue;
+        // Center: results
+        resultArea.setEditable(false);
+        resultArea.setLineWrap(true);
+        resultArea.setWrapStyleWord(true);
 
-            boolean found = false;
+        add(top, BorderLayout.NORTH);
+        add(new JScrollPane(resultArea), BorderLayout.CENTER);
 
-            try {
-                int searchId = Integer.parseInt(input);
-                for (OfficeIDCard card : employees) {
-                    if (card.getEmployeeId() == searchId) {
-                        System.out.println("\n--- Match Found ---");
-                        System.out.println(card + " | Eligible for Promotion: " + card.isEligibleForPromotion());
-                        found = true;
-                        break;
-                    }
+        // Actions
+        searchBtn.addActionListener(e -> search());
+        searchField.addActionListener(e -> search()); // Enter key
+        exitBtn.addActionListener(e -> System.exit(0));
+
+        pack();
+        setLocationRelativeTo(null);
+    }
+
+    private void search() {
+        String input = searchField.getText().trim();
+        if (input.isEmpty()) return;
+
+        StringBuilder result = new StringBuilder();
+
+        try {
+            int searchId = Integer.parseInt(input);
+            for (OfficeIDCard card : employees) {
+                if (card.getEmployeeId() == searchId) {
+                    result.append(format(card));
+                    break;
                 }
-            } catch (NumberFormatException e) {
-                for (OfficeIDCard card : employees) {
-                    if (card.getEmployeeName().toLowerCase().contains(input.toLowerCase())) {
-                        System.out.println("\n--- Match Found ---");
-                        System.out.println(card + " | Eligible for Promotion: " + card.isEligibleForPromotion());
-                        found = true;
-                    }
-                }
             }
-
-            if (!found) {
-                System.out.println("\nError: No employee found matching \"" + input + "\"");
+        } catch (NumberFormatException e) {
+            for (OfficeIDCard card : employees) {
+                if (card.getEmployeeName().toLowerCase().contains(input.toLowerCase())) {
+                    result.append(format(card));
+                }
             }
         }
 
-        scanner.close();
+        if (result.length() == 0) {
+            resultArea.setText("Error: No employee found matching \"" + input + "\"");
+        } else {
+            resultArea.setText(result.toString());
+        }
+    }
+
+    private String format(OfficeIDCard card) {
+        return card + "\nEligible for Promotion: " + card.isEligibleForPromotion() + "\n\n";
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new Main().setVisible(true));
     }
 }
