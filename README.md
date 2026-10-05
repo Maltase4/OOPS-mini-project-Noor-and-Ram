@@ -11,3 +11,5 @@ java Main
 
 ## How to run in web  
 Just open the html file after downloading and run it
+
+## Required satisfied parameters ✅
