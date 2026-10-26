@@ -1,9 +1,9 @@
 package officeinfo;
 
 public class Employee {
-    protected int employeeId;
-    protected String employeeName, position, department, email;
-    protected double performanceRating;
+     int employeeId;
+     String employeeName, position, department, email;
+     double performanceRating;
 
     public Employee(int id, String name, String position, String department, String email, double rating) {
         employeeId = id; employeeName = name; this.position = position;
