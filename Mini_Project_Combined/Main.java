@@ -1,30 +1,14 @@
 import officeinfo.OfficeIDCard;
 import officeinfo.SampleData;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.RowFilter;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.table.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -237,10 +221,9 @@ public class Main extends JFrame implements ActionListener {
             if (id < 0 || accessLevel < 0 || !Double.isFinite(rating)
                     || rating < 0 || rating > 5
                     || !(activeText.equalsIgnoreCase("true")
-                    || activeText.equalsIgnoreCase("false"))) {
-                throw new IllegalArgumentException();
-            }
-            if (name.isEmpty() || position.isEmpty() || department.isEmpty() || email.isEmpty()) {
+                    || activeText.equalsIgnoreCase("false"))
+                    || name.isEmpty() || position.isEmpty()
+                    || department.isEmpty() || email.isEmpty()) {
                 throw new IllegalArgumentException();
             }
             return new OfficeIDCard(id, name, position, department, email,
