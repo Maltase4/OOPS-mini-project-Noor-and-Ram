@@ -1,0 +1,4 @@
+ID	Name	Position	Department	Email	Access Level	Rating	Active	Promotion Eligible
+100245	Aarav Sharma	Software Engineer	Engineering	aarav@company.com	5	3.80	true	true
+100246	Priya Patel	Product Manager	Management	priya@company.com	7	4.20	true	true
+100247	Rohan Verma	QA Analyst	Quality Assurance	rohan@company.com	3	2.80	false	false

@@ -18,5 +18,8 @@ java Main
 ```
 
 Use **Search** or press Enter to filter employees by ID or name. **Show All**
-clears the filter. Select a table row to load its details into the form. Saving
-writes the current employee list to `employees.txt` in the working directory.
+clears the filter. Select a table row to load its details into the form. Adding,
+updating, or deleting an employee automatically updates
+`officeinfo/SampleData.java`. **Save** can also be used to save manually. Since
+this writes Java source code, recompile the project with the command above
+before the next launch to load the updated employee list.

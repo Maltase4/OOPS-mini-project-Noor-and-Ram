@@ -20,9 +20,11 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -36,11 +38,13 @@ public class Main extends JFrame implements ActionListener {
             "ID", "Name", "Position", "Department", "Email",
             "Access Level", "Rating", "Active", "Promotion Eligible"
     };
+    private static final Path SAMPLE_DATA_SOURCE =
+            Paths.get("officeinfo", "SampleData.java");
 
     private final JTextField[] fields = new JTextField[FIELD_LABELS.length];
     private final JTextField searchField = new JTextField(18);
     private final JLabel searchStatus = new JLabel(" ");
-    private final List<OfficeIDCard> employees = new ArrayList<>(SampleData.getEmployees());
+    private final List<OfficeIDCard> employees;
     private final DefaultTableModel model = new DefaultTableModel(COLUMN_NAMES, 0) {
         @Override
         public boolean isCellEditable(int row, int column) {
@@ -52,6 +56,7 @@ public class Main extends JFrame implements ActionListener {
 
     public Main() {
         super("Employee Management and Promotion");
+        employees = new ArrayList<>(SampleData.getEmployees());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(8, 8));
 
@@ -129,7 +134,7 @@ public class Main extends JFrame implements ActionListener {
                 table.clearSelection();
                 break;
             case "Save":
-                saveEmployees();
+                saveEmployees(true);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown action: " + command);
@@ -162,6 +167,7 @@ public class Main extends JFrame implements ActionListener {
             return;
         }
         employees.add(employee);
+        saveEmployees(false);
         resetSearch();
         refreshTable();
         clearFields();
@@ -190,6 +196,7 @@ public class Main extends JFrame implements ActionListener {
         employee.setPerformanceRating(updated.getPerformanceRating());
         employee.setActive(updated.isActive());
 
+        saveEmployees(false);
         resetSearch();
         refreshTable();
         clearFields();
@@ -206,6 +213,7 @@ public class Main extends JFrame implements ActionListener {
                 JOptionPane.YES_NO_OPTION);
         if (choice == JOptionPane.YES_OPTION) {
             employees.remove(table.convertRowIndexToModel(viewRow));
+            saveEmployees(false);
             resetSearch();
             refreshTable();
             clearFields();
@@ -244,33 +252,77 @@ public class Main extends JFrame implements ActionListener {
         }
     }
 
-    private void saveEmployees() {
-        try (PrintWriter output = new PrintWriter(new FileWriter("employees.txt"))) {
-            output.println(String.join("\t", COLUMN_NAMES));
-            for (OfficeIDCard employee : employees) {
-                output.printf("%d\t%s\t%s\t%s\t%s\t%d\t%.2f\t%b\t%b%n",
-                        employee.getEmployeeId(),
-                        cleanForFile(employee.getEmployeeName()),
-                        cleanForFile(employee.getPosition()),
-                        cleanForFile(employee.getDepartment()),
-                        cleanForFile(employee.getEmail()),
-                        employee.getAccessLevel(),
-                        employee.getPerformanceRating(),
-                        employee.isActive(),
-                        employee.isEligibleForPromotion());
-            }
-            if (output.checkError()) {
-                showMessage("Error saving employee data to employees.txt.");
-            } else {
-                showMessage("Employee data saved to employees.txt.");
+    private void saveEmployees(boolean showSuccess) {
+        StringBuilder source = new StringBuilder();
+        source.append("package officeinfo;\n\n")
+                .append("import java.util.ArrayList;\n")
+                .append("import java.util.List;\n\n")
+                .append("public class SampleData {\n")
+                .append("    public static List<OfficeIDCard> getEmployees() {\n")
+                .append("        List<OfficeIDCard> employees = new ArrayList<>();\n");
+        for (OfficeIDCard employee : employees) {
+            source.append("        employees.add(new OfficeIDCard(")
+                    .append(employee.getEmployeeId()).append(", \"")
+                    .append(escapeJavaString(employee.getEmployeeName())).append("\", \"")
+                    .append(escapeJavaString(employee.getPosition())).append("\", \"")
+                    .append(escapeJavaString(employee.getDepartment())).append("\", \"")
+                    .append(escapeJavaString(employee.getEmail())).append("\", ")
+                    .append(employee.getAccessLevel()).append(", ")
+                    .append(employee.isActive()).append(", ")
+                    .append(Double.toString(employee.getPerformanceRating()))
+                    .append("));\n");
+        }
+        source.append("        return employees;\n")
+                .append("    }\n")
+                .append("}\n");
+
+        try {
+            Files.write(SAMPLE_DATA_SOURCE, source.toString().getBytes(StandardCharsets.UTF_8));
+            if (showSuccess) {
+                showMessage("Employee data saved to "
+                        + SAMPLE_DATA_SOURCE.toAbsolutePath()
+                        + ". Recompile the project before the next launch.");
             }
         } catch (IOException exception) {
-            showMessage("Could not save employee data: " + exception.getMessage());
+            showMessage("Could not save employee data to "
+                    + SAMPLE_DATA_SOURCE.toAbsolutePath() + ": " + exception.getMessage());
         }
     }
 
-    private String cleanForFile(String value) {
-        return value.replace('\t', ' ').replace('\n', ' ').replace('\r', ' ');
+    private String escapeJavaString(String value) {
+        StringBuilder escaped = new StringBuilder();
+        for (char character : value.toCharArray()) {
+            switch (character) {
+                case '\\':
+                    escaped.append("\\\\");
+                    break;
+                case '"':
+                    escaped.append("\\\"");
+                    break;
+                case '\n':
+                    escaped.append("\\n");
+                    break;
+                case '\r':
+                    escaped.append("\\r");
+                    break;
+                case '\t':
+                    escaped.append("\\t");
+                    break;
+                case '\b':
+                    escaped.append("\\b");
+                    break;
+                case '\f':
+                    escaped.append("\\f");
+                    break;
+                default:
+                    if (Character.isISOControl(character)) {
+                        escaped.append(String.format("\\u%04x", (int) character));
+                    } else {
+                        escaped.append(character);
+                    }
+            }
+        }
+        return escaped.toString();
     }
 
     private void refreshTable() {
@@ -321,6 +373,13 @@ public class Main extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Main().setVisible(true));
+        SwingUtilities.invokeLater(() -> {
+            try {
+                new Main().setVisible(true);
+            } catch (IllegalStateException exception) {
+                JOptionPane.showMessageDialog(null, exception.getMessage(),
+                        "Employee Data Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
     }
 }
