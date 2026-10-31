@@ -44,8 +44,17 @@ public class Main extends JFrame {
             OfficeIDCard e = sel() < 0 ? null : read();
             if (e != null) { emps.set(sel(), e); commit(); }
         });
-        button(form, "Delete", () -> { if (sel() >= 0) { emps.remove(sel()); commit(); } });
-
+        
+        button(form, "Delete", () -> {
+    if (sel() >= 0) {
+        if (JOptionPane.showConfirmDialog(this, "Delete this employee?",
+                "Confirm Delete", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            emps.remove(sel());
+            commit();
+            JOptionPane.showMessageDialog(this, "Employee deleted successfully!");
+        }
+    } else JOptionPane.showMessageDialog(this, "Select an employee first!");
+});
         add(search, BorderLayout.NORTH);
         add(new JScrollPane(table));
         add(form, BorderLayout.SOUTH);
