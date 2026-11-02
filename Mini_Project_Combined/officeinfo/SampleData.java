@@ -16,7 +16,7 @@ public class SampleData {
         l.add(new OfficeIDCard(101589, "Amara Okafor", "Finance Analyst", "Finance", "amara.okafor@company.com", 5, false, 4.3));
         l.add(new OfficeIDCard(101690, "Noah Kim", "Support Engineer", "Customer Support", "noah.kim@company.com", 4, true, 3.7));
         l.add(new OfficeIDCard(101701, "Elena Petrova", "Project Manager", "Operations", "elena.petrova@company.com", 8, true, 4.6));
-        l.add(new OfficeIDCard(1, "test", "testpos", "testdep", "teste@g.com", 4, false, 4.0));
+        l.add(new OfficeIDCard(123456, "test name", "testpos", "t", "g@gmail.com", 8, false, 4.0));
         return l;
     }
 }

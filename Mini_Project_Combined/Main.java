@@ -39,22 +39,19 @@ public class Main extends JFrame {
             f[i].setBorder(BorderFactory.createTitledBorder(COLS[i]));
             form.add(f[i]);
         }
-        button(form, "Add", () -> { OfficeIDCard e = read(); if (e != null) { emps.add(e); commit(); } });
+        button(form, "Add", () -> { OfficeIDCard e = read(); if (e != null) { emps.add(e); refresh(); msg("Employee added!"); } });
         button(form, "Update", () -> {
             OfficeIDCard e = sel() < 0 ? null : read();
-            if (e != null) { emps.set(sel(), e); commit(); }
+            if (e != null) { emps.set(sel(), e); refresh(); msg("Employee updated!"); }
         });
-        
         button(form, "Delete", () -> {
-    if (sel() >= 0) {
-        if (JOptionPane.showConfirmDialog(this, "Delete this employee?",
-                "Confirm Delete", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            emps.remove(sel());
-            commit();
-            JOptionPane.showMessageDialog(this, "Employee deleted successfully!");
-        }
-    } else JOptionPane.showMessageDialog(this, "Select an employee first!");
-});
+            if (sel() >= 0) { emps.remove(sel()); refresh(); msg("Employee deleted!"); }
+            else msg("Select an employee first!");
+        });
+        button(form, "Save", () -> {
+            if (JOptionPane.showConfirmDialog(this, "Save all changes (adds, updates, deletes)?",
+                    "Confirm Save", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) save();
+        });
         add(search, BorderLayout.NORTH);
         add(new JScrollPane(table));
         add(form, BorderLayout.SOUTH);
@@ -62,6 +59,8 @@ public class Main extends JFrame {
         setSize(1100, 600);
         setLocationRelativeTo(null);
     }
+
+    void msg(String m) { JOptionPane.showMessageDialog(this, m); }
 
     void button(JPanel p, String name, Runnable action) {
         JButton b = new JButton(name);
@@ -91,8 +90,7 @@ public class Main extends JFrame {
         return "\"" + s.replace("\\", "\\\\").replace("\"", "\\\"").replaceAll("\\p{Cntrl}", " ") + "\"";
     }
 
-    void commit() {
-        // 1. Existing code to update SampleData.java
+    void save() {
         String rows = emps.stream().map(e -> String.format("        l.add(new OfficeIDCard(%d, %s, %s, %s, %s, %d, %b, %s));\n",
                 e.getEmployeeId(), q(e.getEmployeeName()), q(e.getPosition()), q(e.getDepartment()),
                 q(e.getEmail()), e.getAccessLevel(), e.isActive(), e.getPerformanceRating()))
@@ -104,7 +102,6 @@ public class Main extends JFrame {
                     + "        List<OfficeIDCard> l = new ArrayList<>();\n" + rows
                     + "        return l;\n    }\n}\n").getBytes(StandardCharsets.UTF_8));
 
-            // 2. New code to write/update a text file (employees.txt)
             String txtContent = emps.stream().map(e -> String.format(
                     "ID: %d | Name: %s | Position: %s | Dept: %s | Email: %s | Access: %d | Rating: %s | Active: %s | Promotion: %s",
                     e.getEmployeeId(), e.getEmployeeName(), e.getPosition(), e.getDepartment(),
@@ -113,11 +110,11 @@ public class Main extends JFrame {
                     .collect(Collectors.joining("\n"));
 
             Files.write(Paths.get("employees.txt"), txtContent.getBytes(StandardCharsets.UTF_8));
+            msg("Saved successfully!");
 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Could not save: " + ex.getMessage());
         }
-        refresh();
     }
 
     void refresh() {
