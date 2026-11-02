@@ -39,9 +39,9 @@ public class Main extends JFrame {
             f[i].setBorder(BorderFactory.createTitledBorder(COLS[i]));
             form.add(f[i]);
         }
-        button(form, "Add", () -> { OfficeIDCard e = read(); if (e != null && ok("Add this employee?")) { emps.add(e); refresh(); msg("Employee added!"); } });
+        button(form, "Add", () -> { OfficeIDCard e = read(-1); if (e != null && ok("Add this employee?")) { emps.add(e); refresh(); msg("Employee added!"); } });
         button(form, "Update", () -> {
-            OfficeIDCard e = sel() < 0 ? null : read();
+            OfficeIDCard e = sel() < 0 ? null : read(sel());
             if (e != null && ok("Update this employee?")) { emps.set(sel(), e); refresh(); msg("Employee updated!"); }
         });
         button(form, "Delete", () -> {
@@ -77,12 +77,17 @@ public class Main extends JFrame {
         return table.getSelectedRow() < 0 ? -1 : table.convertRowIndexToModel(table.getSelectedRow());
     }
 
-    OfficeIDCard read() {
+    OfficeIDCard read(int skip) {
         try {
             String[] v = Arrays.stream(f).map(t -> t.getText().trim()).toArray(String[]::new);
             double r = Double.parseDouble(v[6]);
             if (!(r >= 0 && r <= 5) || Arrays.asList(v).contains("") || !v[0].matches("\\d+")
                     || !v[5].matches("\\d+") || !v[7].matches("(?i)yes|no")) throw new Exception();
+            for (int i = 0; i < emps.size(); i++) {
+                if (i == skip) continue;
+                if (emps.get(i).getEmployeeId() == Integer.parseInt(v[0])) { msg("ID already exists."); return null; }
+                if (emps.get(i).getEmail().equalsIgnoreCase(v[4])) { msg("Email already exists."); return null; }
+            }
             return new OfficeIDCard(Integer.parseInt(v[0]), v[1], v[2], v[3], v[4],
                     Integer.parseInt(v[5]), v[7].equalsIgnoreCase("yes"), r);
         } catch (Exception ex) {
