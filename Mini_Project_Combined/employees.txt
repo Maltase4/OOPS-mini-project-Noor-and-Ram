@@ -1,0 +1,3 @@
+ID: 100245 | Name: Aarav Sharma | Position: Software Engineer | Dept: Engineering | Email: aarav@company.com | Access: 5 | Rating: 3.8 | Active: Yes | Promotion: Yes
+ID: 100346 | Name: Shalini Rathore | Position: Security Head | Dept: Engineering | Email: shalini@company.com | Access: 10 | Rating: 4.0 | Active: Yes | Promotion: Yes
+ID: 100675 | Name: John Doe | Position: CEO | Dept: All | Email: john@company.com | Access: 10 | Rating: 5.0 | Active: Yes | Promotion: Yes

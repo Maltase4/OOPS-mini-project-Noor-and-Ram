@@ -78,9 +78,9 @@ public class Main extends JFrame {
             String[] v = Arrays.stream(f).map(t -> t.getText().trim()).toArray(String[]::new);
             double r = Double.parseDouble(v[6]);
             if (!(r >= 0 && r <= 5) || Arrays.asList(v).contains("") || !v[0].matches("\\d+")
-                    || !v[5].matches("\\d+") || !v[7].matches("(?i)true|false")) throw new Exception();
+                    || !v[5].matches("\\d+") || !v[7].matches("(?i)yes|no")) throw new Exception();
             return new OfficeIDCard(Integer.parseInt(v[0]), v[1], v[2], v[3], v[4],
-                    Integer.parseInt(v[5]), Boolean.parseBoolean(v[7]), r);
+                    Integer.parseInt(v[5]), v[7].equalsIgnoreCase("yes"), r);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Invalid input.");
             return null;
@@ -92,6 +92,7 @@ public class Main extends JFrame {
     }
 
     void commit() {
+        // 1. Existing code to update SampleData.java
         String rows = emps.stream().map(e -> String.format("        l.add(new OfficeIDCard(%d, %s, %s, %s, %s, %d, %b, %s));\n",
                 e.getEmployeeId(), q(e.getEmployeeName()), q(e.getPosition()), q(e.getDepartment()),
                 q(e.getEmail()), e.getAccessLevel(), e.isActive(), e.getPerformanceRating()))
@@ -102,6 +103,17 @@ public class Main extends JFrame {
                     + "    public static List<OfficeIDCard> getEmployees() {\n"
                     + "        List<OfficeIDCard> l = new ArrayList<>();\n" + rows
                     + "        return l;\n    }\n}\n").getBytes(StandardCharsets.UTF_8));
+
+            // 2. New code to write/update a text file (employees.txt)
+            String txtContent = emps.stream().map(e -> String.format(
+                    "ID: %d | Name: %s | Position: %s | Dept: %s | Email: %s | Access: %d | Rating: %s | Active: %s | Promotion: %s",
+                    e.getEmployeeId(), e.getEmployeeName(), e.getPosition(), e.getDepartment(),
+                    e.getEmail(), e.getAccessLevel(), e.getPerformanceRating(), e.isActive() ? "Yes" : "No",
+                    e.isEligibleForPromotion() ? "Yes" : "No"))
+                    .collect(Collectors.joining("\n"));
+
+            Files.write(Paths.get("employees.txt"), txtContent.getBytes(StandardCharsets.UTF_8));
+
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Could not save: " + ex.getMessage());
         }
@@ -112,7 +124,7 @@ public class Main extends JFrame {
         model.setRowCount(0);
         emps.forEach(e -> model.addRow(new Object[]{e.getEmployeeId(), e.getEmployeeName(),
                 e.getPosition(), e.getDepartment(), e.getEmail(), e.getAccessLevel(),
-                e.getPerformanceRating(), e.isActive(), e.isEligibleForPromotion() ? "Yes" : "No"}));
+                e.getPerformanceRating(), e.isActive() ? "Yes" : "No", e.isEligibleForPromotion() ? "Yes" : "No"}));
         for (JTextField t : f) t.setText("");
         search.setText("");
     }

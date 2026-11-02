@@ -15,10 +15,12 @@ public class OfficeIDCard extends Employee implements Promotable {
     public boolean isActive() { return active; }
     public void setActive(boolean v) { active = v; }
 
-    @Override public boolean isEligibleForPromotion() { return active && accessLevel >= 5 && performanceRating >= 3.5; }
+    @Override public boolean isEligibleForPromotion() {
+        return active && accessLevel >= 5 && performanceRating >= 3.5;
+    }
 
     @Override public String toString() {
-        return String.format("ID: %d | Name: %s | Position: %s | Dept: %s | Email: %s | Access Level: %d | Active: %b | Rating: %.1f",
-                employeeId, employeeName, position, department, email, accessLevel, active, performanceRating);
+        return String.format("ID: %d | Name: %s | Position: %s | Dept: %s | Email: %s | Access Level: %d | Active: %s | Rating: %.1f",
+                employeeId, employeeName, position, department, email, accessLevel, active ? "Yes" : "No", performanceRating);
     }
 }
