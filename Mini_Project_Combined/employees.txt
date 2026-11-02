@@ -1,0 +1,11 @@
+ID: 100245 | Name: Aarav Sharma | Position: Software Engineer | Dept: Engineering | Email: aarav@company.com | Access: 5 | Rating: 3.8 | Active: Yes | Promotion: Yes
+ID: 100346 | Name: Shalini Rathore | Position: Security Head | Dept: Engineering | Email: shalini@company.com | Access: 10 | Rating: 4.0 | Active: Yes | Promotion: Yes
+ID: 100812 | Name: Maya Patel | Position: Product Designer | Dept: Design | Email: maya.patel@company.com | Access: 4 | Rating: 4.2 | Active: Yes | Promotion: No
+ID: 100923 | Name: Ethan Brooks | Position: Data Analyst | Dept: Analytics | Email: ethan.brooks@company.com | Access: 5 | Rating: 3.6 | Active: Yes | Promotion: Yes
+ID: 101034 | Name: Hoo le shitt | Position: QA Engineer | Dept: Quality Assurance | Email: lina.chen@company.com | Access: 3 | Rating: 4.5 | Active: No | Promotion: No
+ID: 101145 | Name: Omar Hassan | Position: IT Administrator | Dept: IT | Email: omar.hassan@company.com | Access: 7 | Rating: 3.2 | Active: Yes | Promotion: No
+ID: 101256 | Name: Sofia Rivera | Position: HR Coordinator | Dept: Human Resources | Email: sofia.rivera@company.com | Access: 2 | Rating: 3.9 | Active: No | Promotion: No
+ID: 101367 | Name: Priya Nair | Position: Backend Developer | Dept: Engineering | Email: priya.nair@company.com | Access: 6 | Rating: 4.1 | Active: Yes | Promotion: Yes
+ID: 101589 | Name: Amara Okafor | Position: Finance Analyst | Dept: Finance | Email: amara.okafor@company.com | Access: 5 | Rating: 4.3 | Active: No | Promotion: No
+ID: 101690 | Name: Noah Kim | Position: Support Engineer | Dept: Customer Support | Email: noah.kim@company.com | Access: 4 | Rating: 3.7 | Active: Yes | Promotion: No
+ID: 1008143 | Name: Marya | Position: Product | Dept: Design | Email: mayral@company.com | Access: 4 | Rating: 4.2 | Active: No | Promotion: No

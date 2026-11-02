@@ -20,7 +20,7 @@ public class Main extends JFrame {
     TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
 
     Main() {
-        super("Employees");
+        super("EMPLOYEE MANAGEMENT SYSTEM");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         search.setBorder(BorderFactory.createTitledBorder("Search by ID or name"));
         search.addCaretListener(e -> sorter.setRowFilter(

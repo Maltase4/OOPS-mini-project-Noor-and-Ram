@@ -7,13 +7,13 @@ public class SampleData {
         l.add(new OfficeIDCard(100346, "Shalini Rathore", "Security Head", "Engineering", "shalini@company.com", 10, true, 4.0));
         l.add(new OfficeIDCard(100812, "Maya Patel", "Product Designer", "Design", "maya.patel@company.com", 4, true, 4.2));
         l.add(new OfficeIDCard(100923, "Ethan Brooks", "Data Analyst", "Analytics", "ethan.brooks@company.com", 5, true, 3.6));
-        l.add(new OfficeIDCard(101034, "Lina Chen", "QA Engineer", "Quality Assurance", "lina.chen@company.com", 3, false, 4.5));
+        l.add(new OfficeIDCard(101034, "Hoo le shitt", "QA Engineer", "Quality Assurance", "lina.chen@company.com", 3, false, 4.5));
         l.add(new OfficeIDCard(101145, "Omar Hassan", "IT Administrator", "IT", "omar.hassan@company.com", 7, true, 3.2));
         l.add(new OfficeIDCard(101256, "Sofia Rivera", "HR Coordinator", "Human Resources", "sofia.rivera@company.com", 2, false, 3.9));
         l.add(new OfficeIDCard(101367, "Priya Nair", "Backend Developer", "Engineering", "priya.nair@company.com", 6, true, 4.1));
-        l.add(new OfficeIDCard(101478, "Lucas Martin", "Marketing Specialist", "Marketing", "lucas.martin@company.com", 3, true, 3.4));
         l.add(new OfficeIDCard(101589, "Amara Okafor", "Finance Analyst", "Finance", "amara.okafor@company.com", 5, false, 4.3));
         l.add(new OfficeIDCard(101690, "Noah Kim", "Support Engineer", "Customer Support", "noah.kim@company.com", 4, true, 3.7));
+        l.add(new OfficeIDCard(1008143, "Marya", "Product", "Design", "mayral@company.com", 4, false, 4.2));
         return l;
     }
 }
