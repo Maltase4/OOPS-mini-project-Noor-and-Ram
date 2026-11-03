@@ -1,4 +1,3 @@
-
 import officeinfo.*;
 import javax.swing.*;
 import javax.swing.table.*;
@@ -56,7 +55,7 @@ public class Main extends JFrame {
             }
         });
 
-        table.getSelectionModel().addListSelectionListener(e -> {
+        table.getSelectionModel().addListSelectionListener(e -> { 
             int r = sel();
             for (int i = 0; r >= 0 && i < f.length; i++)
                 f[i].setText("" + model.getValueAt(r, i));
